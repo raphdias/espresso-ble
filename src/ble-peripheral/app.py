@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import logging
-
 import dbus
 import dbus.exceptions
 import dbus.mainloop.glib
@@ -21,7 +20,6 @@ import struct
 import requests
 import array
 from enum import Enum
-
 import sys
 
 MainLoop = None

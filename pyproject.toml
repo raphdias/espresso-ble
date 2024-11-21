@@ -1,0 +1,23 @@
+[project]
+name = 'ble-peripheral'
+version = '0.99'
+description = 'Setting up a Bluetooth Low Energy Peripheral (TODO: C++ version)'
+readme = 'README.md'
+requires-python = '>=3.11'
+authors = [{ name = 'Raphael D.' }]
+dependencies = [
+    'dbus-python>=1.3.2',
+    'requests>=2.32.3',
+    'PyGObject>=3.50.0'
+]
+
+[project.optional-dependencies]
+dev = ['flake8', 'build']
+test = ['parameterized~=0.9.0']
+
+[build-system]
+requires = ['setuptools', 'wheel']
+build-backend = 'setuptools.build_meta'
+
+[tool.setuptools.packages.find]
+where = ['src']

@@ -1,8 +1,6 @@
 
 import dbus
-
 import logging
-import sys
 
 DBUS_OM_IFACE = "org.freedesktop.DBus.ObjectManager"
 DBUS_PROP_IFACE = "org.freedesktop.DBus.Properties"
@@ -20,17 +18,20 @@ GATT_MANAGER_IFACE = "org.bluez.GattManager1"
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 logHandler = logging.StreamHandler()
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+formatter = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logHandler.setFormatter(formatter)
 logger.addHandler(logHandler)
 
 logger.setLevel(logging.DEBUG)
 
+
 def find_adapter(bus):
     """
     Returns the first object that the bluez service has that has a GattManager1 interface
     """
-    remote_om = dbus.Interface(bus.get_object(BLUEZ_SERVICE_NAME, "/"), DBUS_OM_IFACE)
+    remote_om = dbus.Interface(bus.get_object(
+        BLUEZ_SERVICE_NAME, "/"), DBUS_OM_IFACE)
     objects = remote_om.GetManagedObjects()
 
     for o, props in objects.items():
@@ -38,6 +39,7 @@ def find_adapter(bus):
             return o
 
     return None
+
 
 class Application(dbus.service.Object):
     """
@@ -48,8 +50,6 @@ class Application(dbus.service.Object):
         self.path = "/"
         self.services = []
         dbus.service.Object.__init__(self, bus, self.path)
-
-        
 
     def get_path(self):
         return dbus.ObjectPath(self.path)
@@ -236,6 +236,7 @@ class Descriptor(dbus.service.Object):
         logger.info("Default WriteValue called, returning error")
         raise NotSupportedException()
 
+
 class Advertisement(dbus.service.Object):
     PATH_BASE = "/org/bluez/example/advertisement"
 
@@ -256,9 +257,11 @@ class Advertisement(dbus.service.Object):
         properties = dict()
         properties["Type"] = self.ad_type
         if self.service_uuids is not None:
-            properties["ServiceUUIDs"] = dbus.Array(self.service_uuids, signature="s")
+            properties["ServiceUUIDs"] = dbus.Array(
+                self.service_uuids, signature="s")
         if self.solicit_uuids is not None:
-            properties["SolicitUUIDs"] = dbus.Array(self.solicit_uuids, signature="s")
+            properties["SolicitUUIDs"] = dbus.Array(
+                self.solicit_uuids, signature="s")
         if self.manufacturer_data is not None:
             properties["ManufacturerData"] = dbus.Dictionary(
                 self.manufacturer_data, signature="qv"
@@ -325,7 +328,6 @@ class Advertisement(dbus.service.Object):
 AGENT_INTERFACE = "org.bluez.Agent1"
 
 
-
 def ask(prompt):
     try:
         return raw_input(prompt)
@@ -341,7 +343,8 @@ def set_trusted(path):
 
 
 def dev_connect(path):
-    dev = dbus.Interface(bus.get_object("org.bluez", path), "org.bluez.Device1")
+    dev = dbus.Interface(bus.get_object(
+        "org.bluez", path), "org.bluez.Device1")
     dev.Connect()
 
 
@@ -384,7 +387,8 @@ class Agent(dbus.service.Object):
 
     @dbus.service.method(AGENT_INTERFACE, in_signature="ouq", out_signature="")
     def DisplayPasskey(self, device, passkey, entered):
-        logger.info("DisplayPasskey (%s, %06u entered %u)" % (device, passkey, entered))
+        logger.info("DisplayPasskey (%s, %06u entered %u)" %
+                    (device, passkey, entered))
 
     @dbus.service.method(AGENT_INTERFACE, in_signature="os", out_signature="")
     def DisplayPinCode(self, device, pincode):
